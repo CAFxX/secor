@@ -49,25 +49,19 @@ public class AzureUploadManager extends UploadManager {
         final String azureContainer = mConfig.getAzureContainer();
         final String azureKey = localPath.withPrefix(mConfig.getAzurePath()).getLogFilePath();
         final File localFile = new File(localPath.getLogFilePath());
-
-        LOG.info("uploading file {} to azure://{}/{}", localFile, azureContainer, azureKey);
+        
         final Future<?> f = executor.submit(new Runnable() {
             @Override
             public void run() {
-                try {
+                try (FileInputStream lf = new java.io.FileInputStream(localFile)) {
+                    LOG.info("uploading file {} ({} bytes) to azure://{}/{}", localFile, localFile.length(), azureContainer, azureKey);
                     CloudBlobContainer container = blobClient.getContainerReference(azureContainer);
                     container.createIfNotExists();
-
                     CloudBlockBlob blob = container.getBlockBlobReference(azureKey);
-                    blob.upload(new java.io.FileInputStream(localFile), localFile.length());
-
-                } catch (URISyntaxException e) {
-                    throw new RuntimeException(e);
-                } catch (StorageException e) {
-                    throw new RuntimeException(e);
-                } catch (FileNotFoundException e) {
-                    throw new RuntimeException(e);
-                } catch (IOException e) {
+                    blob.upload(lf, localFile.length());
+                } catch (RuntimeException e) {
+                    throw e;
+                } catch (Exception e) {
                     throw new RuntimeException(e);
                 }
             }
