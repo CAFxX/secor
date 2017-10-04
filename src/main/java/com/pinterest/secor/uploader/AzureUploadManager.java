@@ -28,7 +28,7 @@ import java.util.concurrent.Future;
  */
 public class AzureUploadManager extends UploadManager {
     private static final Logger LOG = LoggerFactory.getLogger(AzureUploadManager.class);
-    private static final ExecutorService executor = Executors.newFixedThreadPool(256);
+    private static final ExecutorService executor = Executors.newCachedPoolExecutor();
 
     private CloudBlobClient blobClient;
 
@@ -42,6 +42,9 @@ public class AzureUploadManager extends UploadManager {
 
         CloudStorageAccount storageAccount = CloudStorageAccount.parse(storageConnectionString);
         blobClient = storageAccount.createCloudBlobClient();
+        
+        executor.setMaximumPoolSize(256);
+        executor.setRejectedExecutionHandler(ThreadPoolExecutor.CallerRunsPolicy);
     }
 
     @java.lang.Override
