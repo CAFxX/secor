@@ -18,6 +18,8 @@ import com.google.api.services.storage.StorageScopes;
 import com.google.api.services.storage.model.StorageObject;
 import com.pinterest.secor.common.LogFilePath;
 import com.pinterest.secor.common.SecorConfig;
+import com.pinterest.secor.util.ThreadPoolUtil;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +52,7 @@ public class GsUploadManager extends UploadManager {
 
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
 
-    private static final ExecutorService executor = Executors.newFixedThreadPool(256);
+    private static final ExecutorService executor = ThreadPoolUtil.createCachedThreadPool(256, "GsUploadManager");
 
     /**
      * Global instance of the Storage. The best practice is to make it a single

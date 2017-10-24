@@ -18,6 +18,7 @@ package com.pinterest.secor.uploader;
 
 import com.pinterest.secor.common.*;
 import com.pinterest.secor.util.FileUtil;
+import com.pinterest.secor.util.ThreadPoolUtil;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -37,7 +38,7 @@ import java.util.concurrent.Future;
 public class HadoopS3UploadManager extends UploadManager {
     private static final Logger LOG = LoggerFactory.getLogger(HadoopS3UploadManager.class);
 
-    protected static final ExecutorService executor = Executors.newFixedThreadPool(256);
+    protected static final ExecutorService executor = ThreadPoolUtil.createCachedThreadPool(256, "HadoopS3UploadManager");
 
     public HadoopS3UploadManager(SecorConfig config) {
         super(config);

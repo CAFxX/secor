@@ -3,9 +3,8 @@ package com.pinterest.secor.uploader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -17,6 +16,7 @@ import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
 import com.pinterest.secor.common.LogFilePath;
 import com.pinterest.secor.common.SecorConfig;
+import com.pinterest.secor.util.ThreadPoolUtil;
 
 /**
  * Manages uploads to Microsoft Azure blob storage using Azure Storage SDK for
@@ -28,7 +28,7 @@ import com.pinterest.secor.common.SecorConfig;
  */
 public class AzureUploadManager extends UploadManager {
 	private static final Logger LOG = LoggerFactory.getLogger(AzureUploadManager.class);
-	private static final ExecutorService executor = Executors.newFixedThreadPool(256);
+	private static final ThreadPoolExecutor executor = ThreadPoolUtil.createCachedThreadPool(256, "AzureUploadManager");
 
 	private CloudBlobClient blobClient;
 	private final int uploadTimeout;
