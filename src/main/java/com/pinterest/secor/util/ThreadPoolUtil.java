@@ -4,6 +4,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ThreadPoolUtil {
 
@@ -32,13 +33,15 @@ public class ThreadPoolUtil {
 	 */
 	public static ThreadPoolExecutor createCachedThreadPool(int maxThreads, final String name) {
 		ThreadPoolExecutor executor = createCachedThreadPool(maxThreads);
-		
 		final ThreadFactory tf = executor.getThreadFactory();
+
 		executor.setThreadFactory(new ThreadFactory() {
+			final AtomicInteger cnt = new AtomicInteger();
+
 			@Override
 			public Thread newThread(Runnable r) {
 				Thread t = tf.newThread(r);
-				t.setName(name + "-" + t.getId());
+				t.setName(name + "-" + cnt.incrementAndGet());
 				return t;
 			}
 		});
