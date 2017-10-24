@@ -490,15 +490,29 @@ public class SecorConfig {
       return getBoolean("secor.s3.prefix.md5hash");
     }
 
-    public String getAzureEndpointsProtocol() { return getString("secor.azure.endpoints.protocol"); }
+	public String getAzureEndpointsProtocol() {
+		return getString("secor.azure.endpoints.protocol");
+	}
 
-    public String getAzureAccountName() { return getString("secor.azure.account.name"); }
+	public String getAzureAccountName() {
+		return getString("secor.azure.account.name");
+	}
 
-    public String getAzureAccountKey() { return getString("secor.azure.account.key"); }
+	public String getAzureAccountKey() {
+		return getString("secor.azure.account.key");
+	}
 
-    public String getAzureContainer() { return getString("secor.azure.container.name"); }
+	public String getAzureContainer() {
+		return getString("secor.azure.container.name");
+	}
 
-    public String getAzurePath() { return getString("secor.azure.path"); }
+	public String getAzurePath() {
+		return getString("secor.azure.path");
+	}
+
+	public int getAzureUploadTimeout() {
+		return getInt("secor.azure.upload.timeout.ms");
+	}
 
     public Map<String, String> getProtobufMessageClassPerTopic() {
         String prefix = "secor.protobuf.message.class";
