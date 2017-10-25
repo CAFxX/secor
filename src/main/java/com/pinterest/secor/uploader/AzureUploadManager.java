@@ -3,8 +3,8 @@ package com.pinterest.secor.uploader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,7 @@ import com.pinterest.secor.util.ThreadPoolUtil;
  */
 public class AzureUploadManager extends UploadManager {
 	private static final Logger LOG = LoggerFactory.getLogger(AzureUploadManager.class);
-	private static final ThreadPoolExecutor executor = ThreadPoolUtil.createCachedThreadPool(256, "AzureUploadManager");
+	private static final ExecutorService executor = ThreadPoolUtil.createCachedThreadPool(256, "AzureUploadManager");
 
 	private CloudBlobClient blobClient;
 	private final int uploadTimeout;
@@ -58,8 +58,8 @@ public class AzureUploadManager extends UploadManager {
 		final Future<Void> f = executor.submit(new Callable<Void>() {
 
 			public Void call() throws Exception {
-				LOG.info("uploading file {} ({} bytes) to azure://{}/{}", localFile, localFile.length(), azureContainer,
-						azureKey);
+				LOG.info("uploading file {} ({} bytes) to azure://{}/{}",
+						localFile, localFile.length(), azureContainer, azureKey);
 
 				FileInputStream lf = null;
 				try {
